@@ -72,6 +72,7 @@
                                         if (response.imageFaces && response.imageFaces.length > 0) {
                                             var face = response.imageFaces[0];
                                             if (!user.age && face.age) {
+                                                console.log("face ",face);
                                                 var age;
                                                 if(face.age.indexOf("-")>=0){
                                                     var ageRange = face.age.ageRange.split("-");
