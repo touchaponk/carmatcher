@@ -74,12 +74,12 @@
                                             if (!user.age && face.age) {
                                                 console.log("face ",face);
                                                 var age;
-                                                if(face.age.indexOf("-")>=0){
+                                                if(face.age.ageRange.indexOf("-")>=0){
                                                     var ageRange = face.age.ageRange.split("-");
                                                     age = (parseInt(ageRange[0]) + parseInt(ageRange[1])) / 2;
                                                 }
-                                                else if(face.age.indexOf("<") >= 0) age = parseInt(face.age.replace("<",""));
-                                                else if(face.age.indexOf(">") >= 0) age = parseInt(face.age.replace(">",""));
+                                                else if(face.age.ageRange.indexOf("<") >= 0) age = parseInt(face.age.ageRange.replace("<",""));
+                                                else if(face.age.ageRange.indexOf(">") >= 0) age = parseInt(face.age.ageRange.replace(">",""));
                                                 user.age = age;
                                             }
                                             if (!user.gender && face.gender) {
