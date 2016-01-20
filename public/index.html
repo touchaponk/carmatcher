@@ -62,71 +62,77 @@
 //                                user.is_actual = true;
 //                            }
 //                        }
-                    });
-                    FB.api('/me/posts', function (response) {
-                        console.log("posts ", response);
-                        processFbPosts("", response, function (totalStr) {
-                            $.ajax
-                            ({
-                                type: "POST",
-                                url: '/analyze',
-                                dataType: 'json',
-                                async: false,
-                                //json object to sent to the authentication url
-                                data: {content: totalStr},
-                                success: function (response) {
-                                    console.log("personality ", response);
-                                    user.personality = response;
-                                    user.psycho = {};
-                                    $("#fb-loading").hide();
-                                    setTimeout(function(){
-                                        $("#fb-name").html(user.name);
-                                        $("#fb-age").html("Age: "+user.age+(user.is_actual?"":" (Estimate)"));
-                                        $("#fb-gender").html("Gender: "+user.gender+(user.is_actual?"":" (Analyzed)"));
-                                        $("#fb-result").fadeIn();
-                                        setTimeout(function(){
-                                            updatePersonalityChart("Adventurousness",   100*user.personality.tree.children[0].children[0].children[0].children[0].percentage);
-                                            updatePersonalityChart("Artistic",          100*user.personality.tree.children[0].children[0].children[0].children[1].percentage);
-                                            updatePersonalityChart("Achievement",       100*user.personality.tree.children[0].children[0].children[1].children[0].percentage, "Achievement-Striving");
-                                            updatePersonalityChart("Orderliness",       100*user.personality.tree.children[0].children[0].children[1].children[3].percentage);
-                                            updatePersonalityChart("Neuroticism",       100*user.personality.tree.children[0].children[0].children[4].percentage, "Emotional");
-                                            updatePersonalityChart("Challenge",         100*user.personality.tree.children[1].children[0].children[0].percentage, "Challenge-Seeking");
-                                            analyzePsycho();
-                                            user.model = chooseModel();
-                                            user.model = models["E_coupe"];
-                                            setTimeout(function(){
-                                                $("#fb-model").attr('href', user.model.link);
-                                                $("#fb-model").html("Mercedes-Benz "+user.model.name);
-                                                $("#fb-content").css('background-image', 'url('+user.model.pic+'.jpg)');
-                                                $("#fb-recommend").fadeIn();
+                        FB.api('/me/picture?type=large', function (response) {
+                            $.post("http://gateway-a.watsonplatform.net/calls/url/URLGetRankedImageFaceTags",
+                                    {
+                                        apikey: "f65e5e4bd7a473b10568b26c473d5a4d4e081326",
+                                        outputMode: "json",
+                                        url: response.data.url
+                                    }, function (response) {
+                                        if (response.imageFaces && response.imageFaces.length > 0) {
+                                            var face = response.imageFaces[0];
+                                            if (!user.age && face.age) {
+                                                var age;
+                                                if(face.age.contains("-")){
+                                                    var ageRange = face.age.ageRange.split("-");
+                                                    age = (parseInt(ageRange[0]) + parseInt(ageRange[1])) / 2;
+                                                }
+                                                else if(face.age.contains("<")) age = parseInt(face.age.replace("<",""));
+                                                else if(face.age.contains(">")) age = parseInt(face.age.replace(">",""));
+                                                user.age = age;
+                                            }
+                                            if (!user.gender && face.gender) {
+                                                user.gender = face.gender.gender.toLowerCase();
+                                            }
+                                            user.visual = face;
 
-                                            },1000);
-                                        }, 1000);
-                                    }, 500);
-                                }
-                            });
+                                            FB.api('/me/posts', function (response) {
+                                                console.log("posts ", response);
+                                                processFbPosts("", response, function (totalStr) {
+                                                    $.ajax
+                                                    ({
+                                                        type: "POST",
+                                                        url: '/analyze',
+                                                        dataType: 'json',
+                                                        async: false,
+                                                        //json object to sent to the authentication url
+                                                        data: {content: totalStr},
+                                                        success: function (response) {
+                                                            console.log("personality ", response);
+                                                            user.personality = response;
+                                                            user.psycho = {};
+                                                            $("#fb-loading").hide();
+                                                            setTimeout(function(){
+                                                                $("#fb-name").html(user.name);
+                                                                $("#fb-age").html("Age: "+user.age+(user.is_actual?"":" (Estimate)"));
+                                                                $("#fb-gender").html("Gender: "+user.gender+(user.is_actual?"":" (Analyzed)"));
+                                                                $("#fb-result").fadeIn();
+                                                                setTimeout(function(){
+                                                                    updatePersonalityChart("Adventurousness",   100*user.personality.tree.children[0].children[0].children[0].children[0].percentage);
+                                                                    updatePersonalityChart("Artistic",          100*user.personality.tree.children[0].children[0].children[0].children[1].percentage);
+                                                                    updatePersonalityChart("Achievement",       100*user.personality.tree.children[0].children[0].children[1].children[0].percentage, "Achievement-Striving");
+                                                                    updatePersonalityChart("Orderliness",       100*user.personality.tree.children[0].children[0].children[1].children[3].percentage);
+                                                                    updatePersonalityChart("Neuroticism",       100*user.personality.tree.children[0].children[0].children[4].percentage, "Emotional");
+                                                                    updatePersonalityChart("Challenge",         100*user.personality.tree.children[1].children[0].children[0].percentage, "Challenge-Seeking");
+                                                                    analyzePsycho();
+                                                                    user.model = chooseModel();
+                                                                    user.model = models["E_coupe"];
+                                                                    setTimeout(function(){
+                                                                        $("#fb-model").attr('href', user.model.link);
+                                                                        $("#fb-model").html("Mercedes-Benz "+user.model.name);
+                                                                        $("#fb-content").css('background-image', 'url('+user.model.pic+'.jpg)');
+                                                                        $("#fb-recommend").fadeIn();
+
+                                                                    },1000);
+                                                                }, 1000);
+                                                            }, 500);
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        }
+                                    })
                         });
-                    });
-                    FB.api('/me/picture?type=large', function (response) {
-                        $.post("http://gateway-a.watsonplatform.net/calls/url/URLGetRankedImageFaceTags",
-                                {
-                                    apikey: "f65e5e4bd7a473b10568b26c473d5a4d4e081326",
-                                    outputMode: "json",
-                                    url: response.data.url
-                                }, function (response) {
-                                    if (response.imageFaces && response.imageFaces.length > 0) {
-                                        var face = response.imageFaces[0];
-                                        if (!user.age && face.age) {
-                                            var ageRange = face.age.ageRange.split("-");
-                                            var avg = (parseInt(ageRange[0]) + parseInt(ageRange[1])) / 2;
-                                            user.age = avg;
-                                        }
-                                        if (!user.gender && face.gender) {
-                                            user.gender = face.gender.gender.toLowerCase();
-                                        }
-                                        user.visual = face;
-                                    }
-                                })
                     });
                 } else {
                     console.log('User cancelled login or did not fully authorize.');
