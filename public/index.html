@@ -1,27 +1,464 @@
 <!DOCTYPE html>
-<html>
+<!-- saved from url=(0035)http://www.mbusa.com/mercedes/index -->
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths highresdisplay"
+      lang="en" data-livestyle-extension="available" hola_ext_inject="disabled"><!--<![endif]-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- execId:sndcaaabgn08-20160116:0356.10986-->
 
-  <head>
-    <title>NodeJS Starter Application</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="stylesheets/style.css">
-  </head>
 
-  <body>
-    <table>
-      <tr>
-        <td style= "width:30%;">
-          <img class = "newappIcon" src="images/newapp-icon.png">
-        <td>
-            <h1>Hi there!</h1>
-          <p>Thanks for creating a
-            <span class = "blue">NodeJS Starter Application</span>.
-            Get started by reading our
-            <a href = "https://www.ng.bluemix.net/docs/#starters/nodejs/index.html#nodejs">documentation</a>
-            or use the Start Coding guide under your app in your dashboard.
-    </table>
-  </body>
+    <title>Mercedes-Benz Luxury Cars: Sedans, SUVs, Coupes and Wagons</title>
 
+    <link rel="canonical"
+          href="./Mercedes-Benz Luxury Cars_ Sedans, SUVs, Coupes and Wagons_files/Mercedes-Benz Luxury Cars_ Sedans, SUVs, Coupes and Wagons.html">
+    <link rel="apple-touch-icon" href="http://www.mbusa.com/mercedes/images/icons/appletouchicon.png">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="http://www.mbusa.com/favicon.ico">
+
+
+    <link rel="stylesheet" type="text/css"
+          href="./Mercedes-Benz Luxury Cars_ Sedans, SUVs, Coupes and Wagons_files/mbusa_responsive_min.css">
+
+    <link rel="stylesheet" type="text/css"
+          href="./Mercedes-Benz Luxury Cars_ Sedans, SUVs, Coupes and Wagons_files/index.css">
+
+    <link rel="stylesheet" type="text/css" href="./style.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>
+        var $buoop = {vs: {i: 8, f: 25, o: 17, s: 6}, c: 2};
+        function $buo_f() {
+            var e = document.createElement("script");
+            e.src = "//browser-update.org/update.min.js";
+            document.body.appendChild(e);
+        }
+        ;
+        try {
+            document.addEventListener("DOMContentLoaded", $buo_f, false)
+        }
+        catch (e) {
+            window.attachEvent("onload", $buo_f)
+        }
+    </script>
+
+    <script type="text/javascript">
+        var user = {};
+        function onFbClicked() {
+            FB.login(function (response) {
+                if (response.authResponse) {
+                    $("#fb-login").hide();
+                    $("#fb-loading").show();
+                    console.log('Welcome!  Fetching your information.... ', response);
+                    FB.api('/me?fields=name', function (response) {
+                        console.log("me ", response);
+                        user.name = response.name;
+                        user.id = response.id
+                        $("#fb-profile-pic").attr("src", "http://graph.facebook.com/"+user.id+"/picture?type=large");
+//                        if (response.gender)user.gender = response.gender;
+//                        if (response.birthday) {
+//                            var b = response.birthday;
+//                            b = b.substr(b.length - 4, 4);
+//                            if (!isNaN(b)) {
+//                                user.age = 2016-parseInt(b.substr(b.length - 4, 4));
+//                                user.is_actual = true;
+//                            }
+//                        }
+                    });
+                    FB.api('/me/posts', function (response) {
+                        console.log("posts ", response);
+                        processFbPosts("", response, function (totalStr) {
+                            $.ajax
+                            ({
+                                type: "POST",
+                                url: '/analyze',
+                                dataType: 'json',
+                                async: false,
+                                //json object to sent to the authentication url
+                                data: {content: totalStr},
+                                success: function (response) {
+                                    console.log("personality ", response);
+                                    user.personality = response;
+                                    user.psycho = {};
+                                    $("#fb-loading").hide();
+                                    setTimeout(function(){
+                                        $("#fb-name").html(user.name);
+                                        $("#fb-age").html("Age: "+user.age+(user.is_actual?"":" (Estimate)"));
+                                        $("#fb-gender").html("Gender: "+user.gender+(user.is_actual?"":" (Analyzed)"));
+                                        $("#fb-result").fadeIn();
+                                        setTimeout(function(){
+                                            updatePersonalityChart("Adventurousness",   100*user.personality.tree.children[0].children[0].children[0].children[0].percentage);
+                                            updatePersonalityChart("Artistic",          100*user.personality.tree.children[0].children[0].children[0].children[1].percentage);
+                                            updatePersonalityChart("Achievement",       100*user.personality.tree.children[0].children[0].children[1].children[0].percentage, "Achievement-Striving");
+                                            updatePersonalityChart("Orderliness",       100*user.personality.tree.children[0].children[0].children[1].children[3].percentage);
+                                            updatePersonalityChart("Neuroticism",       100*user.personality.tree.children[0].children[0].children[4].percentage, "Emotional");
+                                            updatePersonalityChart("Challenge",         100*user.personality.tree.children[1].children[0].children[0].percentage, "Challenge-Seeking");
+                                            analyzePsycho();
+                                            user.model = chooseModel();
+                                            user.model = models["E_coupe"];
+                                            setTimeout(function(){
+                                                $("#fb-model").attr('href', user.model.link);
+                                                $("#fb-model").html("Mercedes-Benz "+user.model.name);
+                                                $("#fb-content").css('background-image', 'url('+user.model.pic+'.jpg)');
+                                                $("#fb-recommend").fadeIn();
+
+                                            },1000);
+                                        }, 1000);
+                                    }, 500);
+                                }
+                            });
+                        });
+                    });
+                    FB.api('/me/picture?type=large', function (response) {
+                        $.post("http://gateway-a.watsonplatform.net/calls/url/URLGetRankedImageFaceTags",
+                                {
+                                    apikey: "f65e5e4bd7a473b10568b26c473d5a4d4e081326",
+                                    outputMode: "json",
+                                    url: response.data.url
+                                }, function (response) {
+                                    if (response.imageFaces && response.imageFaces.length > 0) {
+                                        var face = response.imageFaces[0];
+                                        if (!user.age && face.age) {
+                                            var ageRange = face.age.ageRange.split("-");
+                                            var avg = (parseInt(ageRange[0]) + parseInt(ageRange[1])) / 2;
+                                            user.age = avg;
+                                        }
+                                        if (!user.gender && face.gender) {
+                                            user.gender = face.gender.gender.toLowerCase();
+                                        }
+                                        user.visual = face;
+                                    }
+                                })
+                    });
+                } else {
+                    console.log('User cancelled login or did not fully authorize.');
+                }
+            }, {scope: 'user_posts,user_about_me,user_work_history,user_birthday'});
+        }
+        var models = {
+            "C":{
+                name:"C-Class Saloon",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/c-class/w205.flash.html#_int_passengercars:home:model-navi:w205",
+                pic:"model_c"
+            },
+            "E_coupe":{
+                name:"E-Class Coupé",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/e-class/_c207.flash.html",
+                pic:"model_e_coupe"
+            },
+            "SLK":{
+                name:"SLK Roadster",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/slk-class/_r172.flash.html",
+                pic:"model_slk"
+            },
+            "A":{
+                name:"A-Class Saloon",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/a-class/w176.flash.html",
+                pic:"model_a"
+            },
+            "C_coupe":{
+                name:"C-Class Coupé",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/c-class/_c204.flash.html",
+                pic:"model_c_coupe"
+            },
+            "GL":{
+                name:"GL-Class",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/gl-class/x166.flash.html",
+                pic:"model_gl"
+            },
+            "SLS_AMG":{
+                name:"SLS AMG",
+                link:"http://www.mercedes-amg.com/webspecial/slsblackseries/eng.php",
+                pic:"model_sls_amg"
+            },
+            "GLA":{
+                name:"GLA Off-Roader",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/gla-class/x156.flash.html",
+                pic:"model_gla"
+            },
+            "CLA":{
+                name:"CLA Coupé",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/cla-class/c117.flash.html",
+                pic:"model_cla"
+            },
+            "S":{
+                name:"S-Class Saloon",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/s-class/w222.flash.html",
+                pic:"model_s"
+            },
+            "CLS":{
+                name:"CLS Coupé",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/cls-class/_c218.flash.html",
+                pic:"model_cls"
+            },
+            "GLE":{
+                name:"GLE SUV",
+                link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/gle-class/gle_suv.flash.html",
+                pic:"model_gle"
+            },
+        };
+        function analyzePsycho(){
+            if(user.psycho.Achievement<50 && user.psycho.Adventurousness<50) user.psycho = "other";
+            else if(Math.max(user.psycho.Achievement,user.psycho.Adventurousness) == user.psycho.Achievement)
+                user.psycho = "achiever";
+            else
+                user.psycho = "sport";
+        }
+        function chooseModel(){
+            if(user.age <= 30){
+                if(user.gender == "male"){
+                    if(user.psycho == "achiever")
+                        return models["E_coupe"];
+                    else if(user.psycho == "sport")
+                        return models["SLK"];
+                    else
+                        return models["A"];
+                }
+                else{
+                    if(user.psycho == "achiever")
+                        return models["C"];
+                    else if(user.psycho == "sport")
+                        return models["C_coupe"];
+                    else
+                        return models["A"];
+                }
+            }
+            else if(user.age > 30 && user.age <= 40){
+                if(user.gender == "male"){
+                    if(user.psycho == "achiever")
+                        return models["GL"];
+                    else if(user.psycho == "sport")
+                        return models["SLS_AMG"];
+                    else
+                        return models["C_coupe"];
+                }
+                else{
+                    if(user.psycho == "achiever")
+                        return models["GL"];
+                    else if(user.psycho == "sport")
+                        return models["GLA"];
+                    else
+                        return models["CLA"];
+                }
+            }
+            else if(user.age > 40){
+                if(user.gender == "male"){
+                    if(user.psycho == "achiever")
+                        return models["S"];
+                    else if(user.psycho == "sport")
+                        return models["SLK"];
+                    else
+                        return models["C"];
+                }
+                else{
+                    if(user.psycho == "achiever")
+                        return models["S"];
+                    else if(user.psycho == "sport")
+                        return models["CLS"];
+                    else
+                        return models["GLE"];
+                }
+            }
+        }
+        function updatePersonalityChart(key, pct, title){
+            pct = Math.round(pct);
+            if(!title) title = key;
+            user.psycho[key] = pct;
+            $("#chart-"+key+"-title").html(title);
+            $("#chart-"+key+"-pct").html(pct);
+            $("#chart-"+key).data('easyPieChart').update(pct)
+        }
+        function randomBackground(){
+            var arr = Object.keys(models);
+            var i = Math.floor(Math.random()*arr.length);
+            console.log(models[arr[i]].pic);
+            $("#fb-content").css('background-image', 'url('+models[arr[i]].pic+'.jpg)');
+        }
+        function processFbPosts(curr, response, callback) {
+            curr = response.data.reduce(function (a, b) {
+                if (!b.message)return a;
+                else return a + ". " + b.message;
+            }, curr);
+            if (curr.length < 6000 && response.paging.next && response.paging.next.length > 0) {
+                $.get(response.paging.next, function (resp) {
+                    processFbPosts(curr, resp, callback);
+                });
+            }
+            else callback(curr);
+        }
+    </script>
+
+
+<body class="index no-touch">
+<div class="mobile-slide-menu clearer">
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '519273571566121',
+                xfbml: true,
+                version: 'v2.5'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <div class="block mb-search clearer">
+        <div class="search">
+            <form action="http://www.mbusa.com/mercedes/siteSearch" method="post">
+                <input type="hidden" name="client" value="MB_PROD_FE">
+                <input type="hidden" name="site" value="MB_PROD">
+
+                <input type="text" name="q" placeholder="Search">
+                <input type="submit" class="search-magnifier whiteMagnifier" value="">
+            </form>
+        </div>
+    </div>
+</div>
+<input id="headerHost" type="hidden" value="www.mbusa.com">
+<header>
+    <nav id="main">
+        <div class="liquid-wrapper override" style="text-align: center;">
+            <img src="logo.png" style="height: 60px;">
+        </div>
+    </nav>
+</header>
+<div id="fb-content" class="content"
+     data-props="{&quot;contextPath&quot;:&quot;/mercedes&quot;,&quot;combineMinify&quot;:true,&quot;fbAppId&quot;:&quot;122854091098579&quot;,&quot;sections&quot;:[&quot;index&quot;]}"
+     style="
+    height: 650px;
+    background-size:cover;
+    background-position:center;
+">
+    <div id="fb-result" style = "
+  display:none;
+  ">
+        <div id="fb-profile" style="
+    padding: 15px;
+    vertical-align: top;
+  width: 2000px;
+  overflow-x: scroll;
+">
+            <img id = "fb-profile-pic" src="" style="
+    border-radius: 150px;
+    width: 124px;
+    border: 4px solid rgba(255,255,255,1);
+    display: inline-block;
+">
+            <div style="
+    display: inline-block;
+    margin-left: 40px;
+    position: relative;
+    top: -14px;
+    font-size: 20px;
+    margin-right: 30px;
+"><p id = "fb-name"></p>
+                <p id = "fb-age">Age: N/A</p>
+                <p id = "fb-gender" style = "text-transform:capitalize;">Gender: N/A</p></div>
+
+
+            <div class="fb-personality"><p id="chart-Adventurousness-title">Adventurousness</p>
+                <div id="chart-Adventurousness" class="chart" data-percent="0">
+                    <span id = "chart-Adventurousness-pct" class="percent">0</span>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                </div>
+            </div>
+            <div class="fb-personality"><p id="chart-Artistic-title">Artistic</p>
+                <div id="chart-Artistic" class="chart" data-percent="0">
+                    <span id = "chart-Artistic-pct" class="percent">0</span>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                </div>
+            </div>
+            <div class="fb-personality"><p id="chart-Achievement-title">Achievement-seeking</p>
+                <div id="chart-Achievement" class="chart" data-percent="0">
+                    <span id = "chart-Achievement-pct" class="percent">0</span>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                </div>
+            </div>
+            <div class="fb-personality"><p id="chart-Orderliness-title">Orderliness</p>
+                <div id="chart-Orderliness" class="chart" data-percent="0">
+                    <span id = "chart-Orderliness-pct" class="percent">0</span>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                </div>
+            </div>
+            <div class="fb-personality"><p id="chart-Neuroticism-title">Emotional</p>
+                <div id="chart-Neuroticism" class="chart" data-percent="0">
+                    <span id = "chart-Neuroticism-pct" class="percent">0</span>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                </div>
+            </div>
+            <div class="fb-personality"><p id="chart-Challenge-title">Challenge</p>
+                <div id="chart-Challenge" class="chart" data-percent="0">
+                    <span id = "chart-Challenge-pct" class="percent">0</span>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                    <canvas height="165" width="165" style="height: 110px; width: 110px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="fb-recommend" style="
+    position: relative;
+    top: -36px;
+    text-align: center;
+    display:none;
+    /* background: white; */
+">
+        <a id = "fb-model" target="_blank" href="http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/c-class/w205.flash.html#_int_passengercars:home:model-navi:w205" style="
+    background: rgba(255,255,255,0.9);
+    padding: 7px 18px;
+    /* border-radius: 8px; */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    color: #222;
+    /* border: solid 1px rgba(239,30,37,0.6); */
+">
+            Analyzing...
+        </a>
+    </div>
+    <div class="copy-wrapper liquid-wrapper clearer" style="text-align: center; padding-top:80px; font-size:20px;">
+        <button id="fb-login" onclick="onFbClicked()"
+                style="color: rgb(255, 255, 255); font-weight: bold; border-radius: 7px; border: 0px solid; padding: 20px;  background-color: rgb(34, 34, 34);">
+            Which Mercedes model suits me?
+        </button>
+        <img id="fb-loading" src="loading.gif"
+             style="border-radius: 500px; border: 3px solid rgb(98, 130, 155); height: 100px; margin-top: -25px; background: rgb(255, 255, 255); display:none;">
+
+    </div>
+</div>
+
+<script type="text/javascript" src="/jquery.easypiechart.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(function () {
+            //create instance
+            $('.chart').easyPieChart({
+                animate:{
+                    duration:1000,
+                    enabled:true
+                }
+            });
+        });
+    });
+    randomBackground();
+</script>
+
+</body>
 </html>

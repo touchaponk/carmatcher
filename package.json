@@ -1,16 +1,22 @@
 {
-	"name": "NodejsStarterApp",
-	"version": "0.0.1",
-	"description": "A sample nodejs app for Bluemix",
-	"scripts": {
-		"start": "node app.js"
-	},
-	"dependencies": {
-		"express": "4.12.x",
-		"cfenv": "1.0.x"
-	},
-	"repository": {},
-	"engines": {
-		"node": "0.12.x"
-	} 
+  "name": "daimler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "4.13.3",
+    "body-parser": "1.14.1",
+    "request": "2.x",
+    "mongoose": "4.3.x",
+    "body-parser": "1.14.x",
+    "cookie-parser": "1.4.x",
+    "underscore" : "1.8.x",
+    "watson-developer-cloud" : "1.2.x",
+    "cfenv": "1.0.x"
+  }
 }
