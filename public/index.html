@@ -73,7 +73,7 @@
                                             var face = response.imageFaces[0];
                                             if (!user.age && face.age) {
                                                 var age;
-                                                if(face.age.contains("-")){
+                                                if(face.age.indexOf("-")>=0){
                                                     var ageRange = face.age.ageRange.split("-");
                                                     age = (parseInt(ageRange[0]) + parseInt(ageRange[1])) / 2;
                                                 }
