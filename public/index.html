@@ -88,51 +88,61 @@
                                             }
                                             user.visual = face;
 
-                                            FB.api('/me/posts', function (response) {
-                                                console.log("posts ", response);
-                                                processFbPosts("", response, function (totalStr) {
-                                                    $.ajax
-                                                    ({
-                                                        type: "POST",
-                                                        url: '/analyze',
-                                                        dataType: 'json',
-                                                        async: false,
-                                                        //json object to sent to the authentication url
-                                                        data: {content: totalStr},
-                                                        success: function (response) {
-                                                            console.log("personality ", response);
-                                                            user.personality = response;
-                                                            user.psycho = {};
-                                                            $("#fb-loading").hide();
-                                                            setTimeout(function(){
-                                                                $("#fb-name").html(user.name);
+                                        }
+                                        FB.api('/me/posts', function (response) {
+                                            console.log("posts ", response);
+                                            processFbPosts("", response, function (totalStr) {
+                                                $.ajax
+                                                ({
+                                                    type: "POST",
+                                                    url: '/analyze',
+                                                    dataType: 'json',
+                                                    async: false,
+                                                    //json object to sent to the authentication url
+                                                    data: {content: totalStr},
+                                                    success: function (response) {
+                                                        console.log("personality ", response);
+                                                        user.personality = response;
+                                                        user.psycho = {};
+                                                        $("#fb-loading").hide();
+                                                        setTimeout(function(){
+                                                            $("#fb-name").html(user.name);
+                                                            if(user.age){
                                                                 $("#fb-age").html("Age: "+user.age+(user.is_actual?"":" (Estimate)"));
+                                                            }
+                                                            else{
+                                                                $("#fb-age").html("Age: N/A");
+                                                            }
+                                                            if(user.gender){
                                                                 $("#fb-gender").html("Gender: "+user.gender+(user.is_actual?"":" (Analyzed)"));
-                                                                $("#fb-result").fadeIn();
-                                                                setTimeout(function(){
-                                                                    updatePersonalityChart("Adventurousness",   100*user.personality.tree.children[0].children[0].children[0].children[0].percentage);
-                                                                    updatePersonalityChart("Artistic",          100*user.personality.tree.children[0].children[0].children[0].children[1].percentage);
-                                                                    updatePersonalityChart("Achievement",       100*user.personality.tree.children[0].children[0].children[1].children[0].percentage, "Achievement-Striving");
-                                                                    updatePersonalityChart("Orderliness",       100*user.personality.tree.children[0].children[0].children[1].children[3].percentage);
-                                                                    updatePersonalityChart("Neuroticism",       100*user.personality.tree.children[0].children[0].children[4].percentage, "Emotional");
-                                                                    updatePersonalityChart("Challenge",         100*user.personality.tree.children[1].children[0].children[0].percentage, "Challenge-Seeking");
-                                                                    analyzePsycho();
-                                                                    user.model = chooseModel();
+                                                            }
+                                                            else{
+                                                                $("#fb-gender").html("Gender: N/A");
+                                                            }
+                                                            $("#fb-result").fadeIn();
+                                                            setTimeout(function(){
+                                                                updatePersonalityChart("Adventurousness",   100*user.personality.tree.children[0].children[0].children[0].children[0].percentage);
+                                                                updatePersonalityChart("Artistic",          100*user.personality.tree.children[0].children[0].children[0].children[1].percentage);
+                                                                updatePersonalityChart("Achievement",       100*user.personality.tree.children[0].children[0].children[1].children[0].percentage, "Achievement-Striving");
+                                                                updatePersonalityChart("Orderliness",       100*user.personality.tree.children[0].children[0].children[1].children[3].percentage);
+                                                                updatePersonalityChart("Neuroticism",       100*user.personality.tree.children[0].children[0].children[4].percentage, "Emotional");
+                                                                updatePersonalityChart("Challenge",         100*user.personality.tree.children[1].children[0].children[0].percentage, "Challenge-Seeking");
+                                                                analyzePsycho();
+                                                                user.model = chooseModel();
 //                                                                    user.model = models["E_coupe"];
-                                                                    setTimeout(function(){
-                                                                        $("#fb-model").attr('href', user.model.link);
-                                                                        $("#fb-model").html("Mercedes-Benz "+user.model.name);
-                                                                        $("#fb-content").css('background-image', 'url('+user.model.pic+'.jpg)');
-                                                                        $("#fb-recommend").fadeIn();
+                                                                setTimeout(function(){
+                                                                    $("#fb-model").attr('href', user.model.link);
+                                                                    $("#fb-model").html("Mercedes-Benz "+user.model.name);
+                                                                    $("#fb-content").css('background-image', 'url('+user.model.pic+'.jpg)');
+                                                                    $("#fb-recommend").fadeIn();
 
-                                                                    },1000);
-                                                                }, 1000);
-                                                            }, 500);
-                                                        }
-                                                    });
+                                                                },1000);
+                                                            }, 1000);
+                                                        }, 500);
+                                                    }
                                                 });
                                             });
-                                        }
+                                        });
                                     })
                         });
                     });
@@ -201,7 +211,7 @@
                 name:"GLE SUV",
                 link:"http://www.mercedes-benz.com.sg/content/singapore/mpc/mpc_singapore_website/enng/home_mpc/passengercars/home/new_cars/models/gle-class/gle_suv.flash.html",
                 pic:"model_gle"
-            },
+            }
         };
         function analyzePsycho(){
             if(user.psycho.Achievement<50 && user.psycho.Adventurousness<50) user.psycho = "other";
@@ -264,6 +274,13 @@
                     else
                         return models["GLE"];
                 }
+            }
+            else{
+                if(user.psycho == "achiever")
+                    return models["S"];
+                else if(user.psycho == "sport")
+                    return models["SLK"];
+                else return models["C"];
             }
         }
         function updatePersonalityChart(key, pct, title){
