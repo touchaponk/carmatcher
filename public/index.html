@@ -63,6 +63,7 @@
 //                            }
 //                        }
                         FB.api('/me/picture?type=large', function (response) {
+                            console.lg("pic ",response);
                             $.post("http://gateway-a.watsonplatform.net/calls/url/URLGetRankedImageFaceTags",
                                     {
                                         apikey: "f65e5e4bd7a473b10568b26c473d5a4d4e081326",
